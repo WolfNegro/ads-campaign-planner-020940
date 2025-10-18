@@ -1,0 +1,163 @@
+:root {
+  --bg: #0f172a;
+  --card: #1e293b;
+  --surface: #334155;
+  --text: #e2e8f0;
+  --muted: #94a3b8;
+  --accent: #7c3aed;
+  --accent-hover: #6d28d9;
+  --ring: rgba(124, 58, 237, 0.35);
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, sans-serif;
+  line-height: 1.45;
+}
+
+.container {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+header { margin-bottom: 24px; }
+
+.card {
+  background: var(--card);
+  padding: 28px;
+  border-radius: 18px;
+  box-shadow: 0 8px 28px rgba(0,0,0,.25);
+  margin-bottom: 24px;
+  /* evita que cualquier hijo desborde visualmente */
+  overflow: hidden;
+}
+
+h1 { font-size: 2.1rem; margin: 0 0 16px; font-weight: 700; }
+h2 { font-size: 1.6rem; margin: 0 0 12px; font-weight: 700; }
+h3 { font-size: 1.2rem; margin: 0 0 8px; font-weight: 600; }
+
+label { font-size: .85rem; color: var(--muted); margin-bottom: 6px; }
+
+/* ---------- Inputs & botones ---------- */
+input {
+  width: 100%;
+  height: 44px;
+  padding: 0 14px;
+  border-radius: 12px;
+  border: 1px solid #45566f;    /* más contraste entre cuadros */
+  background: #3a475e;
+  color: var(--text);
+  outline: none;
+  transition: box-shadow .15s ease, border-color .15s ease, background .15s ease;
+}
+
+input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--ring);
+  background: #41516b;
+}
+
+button {
+  height: 44px;
+  padding: 0 22px;
+  border: none;
+  border-radius: 12px;
+  background: var(--accent);
+  color: #fff;
+  font-size: .95rem;
+  cursor: pointer;
+  transition: background .15s, transform .05s;
+  white-space: nowrap;  /* evita que rompa líneas y desborde */
+}
+button:hover { background: var(--accent-hover); }
+button:active { transform: translateY(1px); }
+
+/* ---------- Grids y filas ---------- */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 18px;
+}
+
+.row { display: flex; flex-direction: column; gap: 8px; }
+
+/* ===== Formulario del simulador (sin desbordes) =====
+   3 inputs (fracciones elásticas) + 1 columna para botón (ancho mínimo 160px) */
+#sim-form {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) minmax(160px, auto);
+  column-gap: 32px;   /* separación clara entre cuadros */
+  row-gap: 20px;
+  align-items: end;
+  max-width: 100%;    /* nunca más ancho que el card */
+}
+
+/* importante: que los hijos puedan encoger dentro del grid sin empujar el layout */
+#sim-form .row { min-width: 0; }
+
+/* En pantallas entre 560–1200px: 2 inputs por fila + botón elástico */
+@media (max-width: 1200px) {
+  #sim-form { grid-template-columns: repeat(2, minmax(0, 1fr)) minmax(160px, auto); column-gap: 28px; }
+}
+
+/* En pantallas pequeñas: 2 columnas sin botón separado (botón fluye debajo del último input) */
+@media (max-width: 800px) {
+  #sim-form { grid-template-columns: 1fr 1fr; column-gap: 22px; }
+}
+
+/* En móviles chicos: 1 columna (todo en stack) */
+@media (max-width: 560px) {
+  #sim-form { grid-template-columns: 1fr; column-gap: 18px; }
+}
+
+/* ---------- Resumen y tabla ---------- */
+.summary .kpis {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
+.summary .k { font-size: .78rem; color: var(--muted); }
+.summary .v { font-size: 1.25rem; font-weight: 700; }
+
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; margin-top: 16px; }
+th, td { padding: 10px 12px; border-bottom: 1px solid var(--surface); text-align: left; font-size: .9rem; }
+th { color: var(--muted); }
+
+/* ---------- Árbol de estructura ---------- */
+.node {
+  position: relative;
+  padding: 10px 12px;
+  background: var(--surface);
+  border-radius: 10px;
+  margin: 6px 0;
+  cursor: pointer;
+}
+.node.active { outline: 2px solid var(--accent); }
+.node-row { display: flex; align-items: center; gap: 10px; }
+.badge {
+  display: inline-block;
+  font-size: .7rem;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--text);
+  text-transform: uppercase;
+  letter-spacing: .05rem;
+}
+.badge.root { background: transparent; }
+.badge.campaign { background: #2f855a; color: #c6f6d5; }
+.badge.adset    { background: #6b46c1; color: #e9d8fd; }
+.badge.ad       { background: #c05621; color: #fbd38d; }
+
+.children {
+  border-left: 1px dashed var(--surface);
+  margin-left: 18px;
+  padding-left: 14px;
+}
+
+.actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 8px; }

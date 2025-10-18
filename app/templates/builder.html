@@ -1,0 +1,278 @@
+{% extends "base.html" %}
+{% block content %}
+
+<section class="card" id="builder-root">
+  <header class="builder-head">
+    <h2>Asistente de Campañas</h2>
+    <p class="muted">Planifica toda la campaña antes de entrar al Ads Manager: objetivo, ABO/CBO, fechas, segmentación, creatividades, variaciones y UTMs.</p>
+  </header>
+
+  <!-- Stepper -->
+  <nav class="steps">
+    <button class="step is-active" data-step="1"><span>1</span> Campaña</button>
+    <button class="step" data-step="2"><span>2</span> Conjuntos</button>
+    <button class="step" data-step="3"><span>3</span> Anuncios</button>
+    <button class="step" data-step="4"><span>4</span> Revisión & Export</button>
+  </nav>
+
+  <!-- ====================== STEP 1: CAMPAÑA ====================== -->
+  <section class="step-pane is-active" data-pane="1">
+    <form id="form-campaign" class="grid" onsubmit="return false;">
+      <div class="row">
+        <label>Cliente / Proyecto</label>
+        <input id="cmp-client" type="text" placeholder="Ej: Glow Medic" required>
+      </div>
+      <div class="row">
+        <label>Nombre de campaña</label>
+        <input id="cmp-name" type="text" placeholder="Ej: Mensajes Promo Noviembre" required>
+      </div>
+      <div class="row">
+        <label>Objetivo</label>
+        <select id="cmp-objective">
+          <option value="MESSAGES">Mensajes (WhatsApp/Inbox)</option>
+          <option value="LEADS">Leads (Formulario)</option>
+          <option value="SALES">Ventas (Conversiones)</option>
+          <option value="TRAFFIC">Tráfico</option>
+          <option value="AWARENESS">Reconocimiento</option>
+          <option value="ENGAGEMENT">Interacción</option>
+        </select>
+      </div>
+
+      <div class="row">
+        <label>Tipo de compra</label>
+        <div class="seg-toggle" role="tablist" aria-label="ABO o CBO">
+          <button type="button" class="chip is-active" data-cmp-buy="ABO">ABO (presupuesto por conjunto)</button>
+          <button type="button" class="chip" data-cmp-buy="CBO">CBO (presupuesto a nivel campaña)</button>
+        </div>
+      </div>
+
+      <div class="row" data-show-if="CBO">
+        <label>Presupuesto (CBO)</label>
+        <input id="cmp-budget" type="number" min="1" step="0.01" placeholder="1000">
+      </div>
+
+      <div class="row">
+        <label>Moneda</label>
+        <select id="cmp-currency" class="ui-select">
+          <option value="PEN">S/ (PEN)</option>
+          <option value="USD">$ (USD)</option>
+        </select>
+      </div>
+
+      <div class="row">
+        <label>Fecha de inicio</label>
+        <input id="cmp-date-start" type="date" required>
+      </div>
+      <div class="row">
+        <label>Fecha de fin</label>
+        <div class="hstack">
+          <input id="cmp-date-end" type="date">
+          <label class="switch">
+            <input id="cmp-ongoing" type="checkbox">
+            <span>Sin fecha fin (infinita)</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="row">
+        <label>Plataformas</label>
+        <div class="chips">
+          <label class="chip-check"><input type="checkbox" data-cmp-platform value="FACEBOOK" checked> Facebook</label>
+          <label class="chip-check"><input type="checkbox" data-cmp-platform value="INSTAGRAM" checked> Instagram</label>
+          <label class="chip-check"><input type="checkbox" data-cmp-platform value="MESSENGER"> Messenger</label>
+          <label class="chip-check"><input type="checkbox" data-cmp-platform value="AUDIENCE_NETWORK"> Audience Network</label>
+        </div>
+      </div>
+
+      <div class="row">
+        <label>Ubicaciones (placements)</label>
+        <div class="chips wrap" id="cmp-placements">
+          <!-- builder.js poblará sugerencias y checks granulares (Feed, Stories, Reels, Marketplace, etc.) -->
+        </div>
+        <small class="muted">Puedes dejarlo vacío si usarás IA/Advantage+ ubicaciones.</small>
+      </div>
+
+      <div class="row">
+        <label>IA / Advantage+</label>
+        <div class="chips wrap">
+          <label class="chip-check"><input type="checkbox" id="cmp-adv-placements"> Ubicaciones Advantage+</label>
+          <label class="chip-check"><input type="checkbox" id="cmp-adv-audience"> Ampliación de audiencia</label>
+          <label class="chip-check"><input type="checkbox" id="cmp-adv-creative"> Mejoras automáticas de creatividad/texto</label>
+        </div>
+      </div>
+    </form>
+
+    <div class="actions">
+      <button class="btn next" data-next="2">Continuar con Conjuntos →</button>
+    </div>
+  </section>
+
+  <!-- ====================== STEP 2: CONJUNTOS ====================== -->
+  <section class="step-pane" data-pane="2">
+    <div class="grid">
+      <div class="row">
+        <label>Conjuntos</label>
+        <p class="muted">Crea uno o varios conjuntos. Si elegiste ABO, define presupuesto por conjunto; si CBO, el presupuesto se ignora aquí.</p>
+      </div>
+      <div class="row">
+        <button class="btn" id="btn-add-adset">+ Agregar conjunto</button>
+      </div>
+    </div>
+
+    <!-- Lista dinámica -->
+    <div id="adsets-list" class="stack gap-12">
+      <!-- builder.js renderiza tarjetas de conjuntos aquí -->
+      <!-- Estructura de conjunto (render):
+        .adset-card[data-adset-id]
+          - Nombre
+          - Presupuesto (si ABO)
+          - Público (edad, sexo, países/ciudades, radio)
+          - Intereses (chips)
+          - IA audience toggle
+          - Ubicaciones del conjunto (si sobrescribe)
+          - Notas
+      -->
+    </div>
+
+    <div class="actions between">
+      <button class="btn ghost" data-prev="1">← Volver</button>
+      <button class="btn next" data-next="3">Continuar con Anuncios →</button>
+    </div>
+  </section>
+
+  <!-- ====================== STEP 3: ANUNCIOS ====================== -->
+  <section class="step-pane" data-pane="3">
+    <div class="grid">
+      <div class="row">
+        <label>Anuncios</label>
+        <p class="muted">Asigna anuncios por conjunto. Puedes usar ID existente o crear anuncios nuevos con variaciones de copy/título/desc.</p>
+      </div>
+
+      <div class="row">
+        <label>Conjunto destino</label>
+        <select id="ads-target-adset">
+          <!-- builder.js poblará los adsets creados -->
+        </select>
+      </div>
+
+      <div class="row">
+        <button class="btn" id="btn-add-ad">+ Agregar anuncio</button>
+      </div>
+    </div>
+
+    <div id="ads-list" class="stack gap-12">
+      <!-- builder.js renderiza tarjetas de anuncio aquí -->
+      <!-- Estructura de anuncio (render):
+        .ad-card[data-ad-id]
+          - Toggle: usar Post ID
+            - Si sí: input post_id
+            - Si no: nombre, CTA, destino, UTM builder
+                   variaciones: copy[], headline[], description[]
+          - Adjuntos opcionales: imagen/video (solo referencia)
+          - IA toggles: mejoras de texto ON/OFF (solo documentación)
+      -->
+    </div>
+
+    <div class="actions between">
+      <button class="btn ghost" data-prev="2">← Volver</button>
+      <button class="btn next" data-next="4">Revisar & Exportar →</button>
+    </div>
+  </section>
+
+  <!-- ====================== STEP 4: REVISIÓN & EXPORT ====================== -->
+  <section class="step-pane" data-pane="4">
+    <div class="grid">
+      <div class="row">
+        <label>Resumen</label>
+        <p class="muted">Valida estructura y contenidos. Puedes exportar como JSON (para compartir/guardar) o CSVs por nivel (campañas/conjuntos/anuncios).</p>
+      </div>
+    </div>
+
+    <div class="review-grid">
+      <div class="review-card">
+        <h3>Campaña</h3>
+        <pre id="review-campaign" class="code"></pre>
+      </div>
+      <div class="review-card">
+        <h3>Conjuntos</h3>
+        <pre id="review-adsets" class="code"></pre>
+      </div>
+      <div class="review-card">
+        <h3>Anuncios</h3>
+        <pre id="review-ads" class="code"></pre>
+      </div>
+    </div>
+
+    <div class="actions wrap">
+      <button class="btn ghost" data-prev="3">← Editar Anuncios</button>
+      <button class="btn" id="btn-save-draft">Guardar borrador</button>
+      <button class="btn" id="btn-export-json">Exportar JSON</button>
+      <button class="btn" id="btn-export-csv">Exportar CSV</button>
+      <button class="btn" id="btn-export-pdf" title="Prototipo (opcional)">PDF (preview)</button>
+    </div>
+  </section>
+</section>
+
+<!-- ====================== ESTILOS LOCALES (solo del wizard) ====================== -->
+<style>
+  .builder-head { margin-bottom: 10px; }
+  .builder-head .muted { color: var(--muted); margin-top: 4px; }
+
+  .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 12px 0 22px; }
+  .step {
+    background: #253244;
+    border: 1px solid #2f3c52;
+    color: var(--text);
+    border-radius: 12px;
+    padding: 12px;
+    text-align: left;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex; gap: 10px; align-items: center;
+  }
+  .step span {
+    display: inline-grid; place-items: center; width: 28px; height: 28px;
+    background: #1a2231; border-radius: 999px; border: 1px solid #334155; font-size: .9rem;
+  }
+  .step.is-active { border-color: var(--accent); box-shadow: 0 0 0 3px var(--ring); }
+  .step-pane { display: none; }
+  .step-pane.is-active { display: block; }
+
+  .seg-toggle .chip { margin-right: 8px; }
+  .chip, .chip-check {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 8px 12px; border-radius: 999px; background: #2a3a51; color: var(--text);
+    border: 1px solid #3a4a62; cursor: pointer; user-select: none;
+  }
+  .chip.is-active { border-color: var(--accent); box-shadow: 0 0 0 3px var(--ring); }
+  .chip-check input { margin-right: 6px; }
+  .chips { display: flex; gap: 10px; }
+  .chips.wrap { flex-wrap: wrap; }
+
+  .switch { display: inline-flex; align-items: center; gap: 8px; }
+  .hstack { display: flex; gap: 10px; align-items: center; }
+
+  .stack { display: flex; flex-direction: column; }
+  .gap-12 { gap: 12px; }
+
+  .actions { margin-top: 16px; display: flex; gap: 10px; justify-content: flex-end; }
+  .actions.between { justify-content: space-between; }
+  .actions.wrap { flex-wrap: wrap; }
+
+  .btn { height: 44px; padding: 0 18px; border-radius: 12px; border: none; background: var(--accent); color: #fff; cursor: pointer; }
+  .btn:hover { background: var(--accent-hover); }
+  .btn.ghost { background: #2a3550; color: var(--text); }
+  .btn.next { font-weight: 700; }
+
+  .review-grid { display: grid; grid-template-columns: 1fr; gap: 14px; }
+  @media (min-width: 1000px) { .review-grid { grid-template-columns: 1fr 1fr 1fr; } }
+  .review-card { background: #253244; border: 1px solid #2f3c52; border-radius: 14px; padding: 12px; }
+  .code {
+    background: #1a2231; border: 1px solid #2a364a; border-radius: 10px; padding: 10px; color: #cce3ff;
+    max-height: 320px; overflow: auto; font-size: .85rem;
+  }
+</style>
+
+<!-- ====================== JS DEL WIZARD ====================== -->
+<script src="{{ url_for('static', filename='js/builder.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,141 @@
+/* =========================================================
+   Planner.css — Estilos del Asistente de Campañas (dark UI)
+   ========================================================= */
+
+:root{
+  --bg-color:#0b0e16; --panel-color:#101625; --panel-soft:#121a2b;
+  --border-color:#24314a; --text-color:#e6eaf2; --muted-color:#b2bdd3;
+  --primary:#7c4dff; --primary-600:#6b3df3;
+  --input-bg:#0f1724; --chip-bg:#131c2e;
+  --radius:12px; --radius-sm:8px; --shadow:0 6px 24px rgba(0,0,0,.35);
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;
+  color:var(--text-color);
+  background:radial-gradient(1200px 800px at 20% -10%,#0d1730 0%,#0b0e16 40%,#0b0e16 100%);
+  line-height:1.45;
+}
+
+.app{max-width:1080px;margin:42px auto 80px;padding:0 20px}
+.title{font-size:28px;font-weight:700;margin:0 0 8px}
+.subtitle{color:var(--muted-color);margin:0 0 24px;font-size:14px}
+
+/* Pasos */
+.steps{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:22px}
+.step{
+  background:var(--panel-color);color:var(--muted-color);
+  border:1px solid var(--border-color);padding:10px 14px;border-radius:var(--radius-sm);
+  cursor:pointer;transition:.2s ease;
+}
+.step:hover{border-color:#334561;color:#d7def0}
+.step.active{background:#151e33;color:#e7edff;border-color:#3b4f74;box-shadow:inset 0 0 0 2px rgba(124,77,255,.25)}
+
+.step-content{display:none}
+.step-content.active{display:block}
+
+.section-title{font-size:20px;margin:8px 0 16px}
+.description{color:var(--muted-color);margin-bottom:14px}
+
+/* Grillas */
+.form-row{display:grid;grid-template-columns:repeat(12,1fr);gap:14px;margin-bottom:16px}
+.form-row.navigation{align-items:center}
+.form-group{grid-column:span 6;display:flex;flex-direction:column;gap:8px}
+.form-group.full{grid-column:1 / -1}
+.form-group.checkbox-group{grid-column:span 12;display:flex;align-items:center;gap:10px}
+
+label{color:var(--muted-color);font-size:13px}
+
+/* Inputs base */
+.app input[type="text"],
+.app input[type="number"],
+.app input[type="date"],
+.app select,
+.app textarea{
+  background:var(--input-bg);color:var(--text-color);border:1px solid var(--border-color);
+  border-radius:var(--radius-sm);padding:10px 12px;outline:none;transition:border-color .2s,box-shadow .2s;
+}
+.app input:focus,.app select:focus,.app textarea:focus{border-color:#3f4f70;box-shadow:0 0 0 3px rgba(124,77,255,.18)}
+.app input[disabled]{opacity:.5;cursor:not-allowed}
+
+/* ====== Chips ====== */
+/* Grupos de chips */
+.checkbox-chip-group,.placements-grid{display:flex;gap:10px;flex-wrap:wrap}
+
+/* 🔧 FIX: Ocultar SOLO los checkboxes dentro de grupos de chips
+   (así no afecta al checkbox nativo de “Sin fecha fin”). */
+.checkbox-chip-group input[type="checkbox"],
+.placements-grid input[type="checkbox"]{
+  position:absolute; /* mantiene accesibilidad del label for= */
+  opacity:0;
+  width:0;height:0;
+  pointer-events:none;
+}
+
+/* Apariencia del chip (el label) */
+.app input[type="checkbox"] + .chip{
+  display:inline-block;
+  padding:8px 12px;background:var(--chip-bg);color:var(--muted-color);
+  border:1px solid var(--border-color);border-radius:999px;font-size:12px;cursor:pointer;
+  transition:background .2s,color .2s,border-color .2s;white-space:normal;text-align:center
+}
+.app .chip.small{font-size:12px;padding:7px 10px;border-radius:14px}
+.app input[type="checkbox"]:checked + .chip{
+  background:#192543;color:#e7edff;border-color:#3b4f74;box-shadow:inset 0 0 0 2px rgba(124,77,255,.22)
+}
+/* Focus accesible cuando el input (oculto) recibe foco via teclado */
+.checkbox-chip-group input[type="checkbox"]:focus-visible + .chip,
+.placements-grid input[type="checkbox"]:focus-visible + .chip{
+  box-shadow:0 0 0 3px rgba(124,77,255,.35);
+}
+
+/* Radios como chips: ocultamos solo los radios de .radio-group */
+.radio-group input[type="radio"]{display:none}
+.radio-group .radio-label{
+  display:inline-block;padding:8px 12px;background:var(--chip-bg);color:var(--muted-color);
+  border:1px solid var(--border-color);border-radius:999px;font-size:12px;cursor:pointer;transition:all .2s
+}
+.radio-group input[type="radio"]:checked + .radio-label{
+  background:#192543;color:#e7edff;border-color:#3b4f74;box-shadow:inset 0 0 0 2px rgba(124,77,255,.22)
+}
+
+/* Botones */
+.primary-btn,.back-btn{
+  border:none;outline:none;cursor:pointer;border-radius:10px;padding:10px 14px;font-weight:600;
+  transition:transform .04s,box-shadow .2s,background .2s
+}
+.primary-btn{background:var(--primary);color:#fff;box-shadow:0 10px 24px rgba(124,77,255,.2)}
+.primary-btn:hover{background:var(--primary-600)}
+.primary-btn:active{transform:translateY(1px)}
+.back-btn{color:#a6b4d0;background:transparent;border:1px solid var(--border-color)}
+.back-btn:hover{color:#d7e1fa;border-color:#3b4f74}
+
+/* Tarjetas */
+.sets-container,.ads-container{display:grid;gap:14px}
+.ad-card{background:var(--panel-soft);border:1px solid var(--border-color);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px;position:relative}
+.ad-card .remove-ad{position:absolute;top:10px;right:12px;font-size:12px;color:#ffb4b4;background:transparent;border:none;cursor:pointer}
+.ad-card .remove-ad:hover{color:#ffd1d1;text-decoration:underline}
+
+.ad-form-row{display:grid;grid-template-columns:repeat(12,1fr);gap:12px;margin-bottom:12px}
+.ad-form-group{grid-column:span 3;display:flex;flex-direction:column;gap:6px}
+.ad-form-group label{font-size:12px;color:var(--muted-color)}
+.ad-form-group input,.ad-form-group select{padding:8px 10px}
+
+/* Variaciones y Fases */
+.variations{display:grid;gap:12px}
+.variation-group{background:#0f1628;border:1px dashed #2a3956;border-radius:10px}
+.variation-header{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;color:#c4d0ea;border-bottom:1px dashed #203150}
+.variation-header .remove-variation{background:transparent;color:#ffb4b4;border:none;cursor:pointer;font-size:12px}
+.variation-header .remove-variation:hover{color:#ffd1d1;text-decoration:underline}
+.variation-fields{display:grid;grid-template-columns:1fr;gap:10px;padding:12px}
+
+/* Resumen */
+.summary-container{background:var(--panel-soft);border:1px solid var(--border-color);border-radius:var(--radius);padding:18px}
+.placeholder-text{color:var(--muted-color)}
+
+/* Responsive */
+@media (max-width:1024px){.ad-form-group{grid-column:span 4}}
+@media (max-width:860px){.form-group{grid-column:span 12}.ad-form-group{grid-column:span 6}}
+@media (max-width:560px){.ad-form-row{grid-template-columns:1fr}.ad-form-group{grid-column:span 12}.steps{gap:8px}}

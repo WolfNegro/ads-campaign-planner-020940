@@ -1,0 +1,250 @@
+{# app/templates/plan.html #}
+{% extends "base.html" %}
+
+{# ===== Carga de CSS (usa el bloque si existe en tu base) ===== #}
+{% block head_extra %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/planner.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="app">
+  <h1 class="title">Asistente de Campañas</h1>
+  <p class="subtitle">
+    Planifica toda la campaña antes de entrar al Ads Manager: objetivo, ABO/CBO,
+    fechas, segmentación, creatividades, variaciones y UTMs.
+  </p>
+
+  <!-- Navegación por pasos -->
+  <nav class="steps" aria-label="Navegación por pasos">
+    <button class="step active" data-step="1" type="button">1&nbsp;Campaña</button>
+    <button class="step" data-step="2" type="button">2&nbsp;Conjuntos</button>
+    <button class="step" data-step="3" type="button">3&nbsp;Anuncios</button>
+    <button class="step" data-step="4" type="button">4&nbsp;Revisión&nbsp;&amp;&nbsp;Export</button>
+  </nav>
+
+  <!-- Paso 1: Campaña -->
+  <section id="step-1" class="step-content active" aria-labelledby="step1-header">
+    <h2 id="step1-header" class="section-title">Campaña</h2>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="cliente">Cliente / Proyecto</label>
+        <input type="text" id="cliente" placeholder="Nombre del cliente o proyecto" />
+      </div>
+      <div class="form-group">
+        <label for="campana">Nombre de campaña</label>
+        <input type="text" id="campana" placeholder="Nombre de la campaña" />
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="objetivo">Objetivo</label>
+        <select id="objetivo">
+          <option value="mensajes">Mensajes (WhatsApp/Inbox)</option>
+          <option value="conversiones">Conversiones</option>
+          <option value="alcance">Alcance</option>
+          <option value="tráfico">Tráfico</option>
+          <option value="reproducciones">Reproducciones de video</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Tipo de compra</label>
+        <div class="radio-group">
+          <input type="radio" id="abo" name="compra" value="abo" checked />
+          <label for="abo" class="radio-label">ABO (presupuesto por conjunto)</label>
+
+          <input type="radio" id="cbo" name="compra" value="cbo" />
+          <label for="cbo" class="radio-label">CBO (presupuesto a nivel campaña)</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="fecha-inicio">Fecha de inicio</label>
+        <input type="date" id="fecha-inicio" />
+      </div>
+      <div class="form-group">
+        <label for="fecha-fin">Fecha de fin</label>
+        <input type="date" id="fecha-fin" />
+      </div>
+      <div class="form-group checkbox-group">
+        <input type="checkbox" id="sin-fin" />
+        <label for="sin-fin" class="checkbox-label">Sin fecha fin (infinita)</label>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group full">
+        <label>Plataformas</label>
+        <div class="checkbox-chip-group">
+          <input type="checkbox" id="facebook" value="facebook" checked />
+          <label for="facebook" class="chip">Facebook</label>
+
+          <input type="checkbox" id="instagram" value="instagram" checked />
+          <label for="instagram" class="chip">Instagram</label>
+
+          <input type="checkbox" id="audience-network" value="audience-network" />
+          <label for="audience-network" class="chip">Audience Network</label>
+
+          <input type="checkbox" id="messenger" value="messenger" />
+          <label for="messenger" class="chip">Messenger</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group full">
+        <label>Ubicaciones (placements)</label>
+        <div class="placements-grid">
+          <input type="checkbox" id="feed" value="feed" checked />
+          <label for="feed" class="chip small">Feed</label>
+
+          <input type="checkbox" id="stories" value="stories" checked />
+          <label for="stories" class="chip small">Stories</label>
+
+          <input type="checkbox" id="reels" value="reels" checked />
+          <label for="reels" class="chip small">Reels</label>
+
+          <input type="checkbox" id="marketplace" value="marketplace" />
+          <label for="marketplace" class="chip small">Marketplace</label>
+
+          <input type="checkbox" id="right-column" value="right-column" />
+          <label for="right-column" class="chip small">Right column</label>
+
+          <input type="checkbox" id="instream-video" value="instream-video" />
+          <label for="instream-video" class="chip small">In-stream video</label>
+
+          <input type="checkbox" id="search" value="search" />
+          <label for="search" class="chip small">Search results</label>
+
+          <input type="checkbox" id="explore" value="explore" />
+          <label for="explore" class="chip small">Explorar Instagram</label>
+
+          <input type="checkbox" id="overlay" value="overlay" />
+          <label for="overlay" class="chip small">Reels Overlay</label>
+
+          <input type="checkbox" id="instant-articles" value="instant-articles" />
+          <label for="instant-articles" class="chip small">Artículos instantáneos</label>
+        </div>
+      </div>
+
+      <div class="form-group full">
+        <label>IA / Advantage+</label>
+        <div class="placements-grid">
+          <input type="checkbox" id="advantage-placements" value="advantage-placements" />
+          <label for="advantage-placements" class="chip small">Ubicaciones Advantage+</label>
+
+          <input type="checkbox" id="expansion" value="expansion" />
+          <label for="expansion" class="chip small">Ampliación de audiencia</label>
+
+          <input type="checkbox" id="creative-optimization" value="creative-optimization" />
+          <label for="creative-optimization" class="chip small">Mejoras automáticas de creatividad/texto</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-row navigation">
+      <button class="primary-btn next-step" data-next="2" type="button">Siguiente</button>
+    </div>
+  </section>
+
+  <!-- Paso 2: Conjuntos -->
+  <section id="step-2" class="step-content" aria-labelledby="step2-header">
+    <h2 id="step2-header" class="section-title">Conjuntos</h2>
+    <p class="description">
+      Crea uno o varios conjuntos. Si elegiste ABO, define el presupuesto por conjunto;
+      si CBO, el presupuesto se ignora aquí.
+    </p>
+    <button class="primary-btn" id="add-set" type="button">+ Agregar conjunto</button>
+    <div id="sets-container" class="sets-container"></div>
+    <div class="form-row navigation">
+      <button class="back-btn prev-step" data-prev="1" type="button">← Volver</button>
+      <button class="primary-btn next-step" data-next="3" type="button">Siguiente</button>
+    </div>
+  </section>
+
+  <!-- Paso 3: Anuncios -->
+  <section id="step-3" class="step-content" aria-labelledby="step3-header">
+    <h2 id="step3-header" class="section-title">Anuncios</h2>
+    <p class="description">
+      Asigna anuncios a tus conjuntos. Puedes usar ID existente o crear anuncios nuevos con
+      secciones de copy/títulos/ideas.
+    </p>
+    <button class="primary-btn" id="add-ad" type="button">+ Agregar anuncio</button>
+    <div id="ads-container" class="ads-container"></div>
+    <div class="form-row navigation">
+      <button class="back-btn prev-step" data-prev="2" type="button">← Volver</button>
+      <button class="primary-btn next-step" data-next="4" type="button">Continuar</button>
+    </div>
+  </section>
+
+  <!-- Paso 4: Revisión & Export + Simulación -->
+  <section id="step-4" class="step-content" aria-labelledby="step4-header">
+    <h2 id="step4-header" class="section-title">Revisión &amp; Export</h2>
+    <p class="description">
+      Revisa tu configuración final, simula resultados por presupuesto/CPA y exporta el plan.
+    </p>
+
+    <!-- Panel de Simulación -->
+    <div class="ad-card" style="margin-bottom:14px">
+      <h3 style="margin:0 0 10px">Proyección de resultados</h3>
+      <div class="ad-form-row">
+        <div class="ad-form-group">
+          <label for="sim-budget">Presupuesto total (PEN)</label>
+          <input id="sim-budget" type="number" placeholder="Ej: 3000">
+        </div>
+        <div class="ad-form-group">
+          <label for="sim-cpa">CPA objetivo (PEN)</label>
+          <input id="sim-cpa" type="number" placeholder="Ej: 15">
+        </div>
+        <div class="ad-form-group">
+          <label for="sim-days">Días</label>
+          <input id="sim-days" type="number" placeholder="Ej: 30">
+        </div>
+      </div>
+
+      <div class="ad-form-row">
+        <div class="ad-form-group" style="grid-column: 1 / -1">
+          <label>Fases (opcional)</label>
+          <div id="phases-editor" class="variations">
+            <!-- filas dinámicas de fases -->
+          </div>
+          <button class="primary-btn" id="add-phase" type="button" style="margin-top:8px">+ Agregar fase</button>
+        </div>
+      </div>
+
+      <div class="form-row navigation">
+        <button class="primary-btn" id="simulate-btn" type="button">Simular</button>
+        <button class="back-btn" id="export-json-btn" type="button">Exportar JSON</button>
+        <button class="back-btn" id="export-csv-btn" type="button">Exportar CSV</button>
+        <span id="simulate-status" style="margin-left:10px;color:#a6b4d0"></span>
+      </div>
+    </div>
+
+    <!-- Toolbar de exportación de ESTRUCTURA (para Excel/Sheets) -->
+    <div id="structure-toolbar" class="form-row navigation">
+      <button class="primary-btn" id="export-structure-csv" type="button">Exportar Estructura CSV</button>
+      <button class="back-btn" id="export-structure-json" type="button">Exportar Estructura JSON</button>
+      <button class="back-btn" id="preview-structure" type="button">Previsualizar</button>
+    </div>
+
+    <!-- Resumen -->
+    <div id="summary-container" class="summary-container">
+      <p class="placeholder-text">
+        El resumen de la campaña aparecerá aquí cuando hayas completado los pasos anteriores.
+      </p>
+    </div>
+
+    <div class="form-row navigation">
+      <button class="back-btn prev-step" data-prev="3" type="button">← Volver</button>
+    </div>
+  </section>
+</div>
+{% endblock %}
+
+{# ===== Carga de JS (usa el bloque si existe) ===== #}
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/planner.js') }}"></script>
+{% endblock %}

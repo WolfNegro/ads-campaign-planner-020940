@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<section class="card">
+  <h2>Estructura de Campañas</h2>
+
+  <!-- Crear campaña rápida -->
+  <form id="new-campaign" class="grid" onsubmit="return false;">
+    <div class="row">
+      <label>Cliente / Proyecto</label>
+      <input id="nc-project" type="text" placeholder="Nombre del cliente" />
+    </div>
+    <div class="row">
+      <label>Nombre de campaña</label>
+      <input id="nc-name" type="text" placeholder="Campaña Q4 Leads" />
+    </div>
+    <div class="row">
+      <label>Objetivo</label>
+      <select id="nc-obj" class="ui-select">
+        <option value="LEADS">Leads</option>
+        <option value="MESSAGES">Mensajes</option>
+        <option value="PURCHASES">Compras</option>
+        <option value="TRAFFIC_WHATSAPP">Tráfico a WhatsApp</option>
+      </select>
+    </div>
+    <div class="row">
+      <label>Moneda</label>
+      <select id="nc-currency" class="ui-select">
+        <option value="PEN">S/ (PEN)</option>
+        <option value="USD">$ (USD)</option>
+      </select>
+    </div>
+    <div class="row">
+      <label>Presupuesto total</label>
+      <input id="nc-budget" type="number" step="0.01" placeholder="1500" />
+    </div>
+    <div class="row">
+      <label>CPA esperado</label>
+      <input id="nc-cpa" type="number" step="0.01" placeholder="5" />
+    </div>
+    <div class="row">
+      <label>Días</label>
+      <input id="nc-days" type="number" placeholder="30" />
+    </div>
+    <div class="row" style="align-self:end;">
+      <button id="btn-create" type="button">Crear campaña</button>
+    </div>
+  </form>
+</section>
+
+<section class="card">
+  <h3>Campañas</h3>
+  <div id="campaigns" class="grid"></div>
+</section>
+
+<script src="{{ url_for('static', filename='js/structure.js') }}"></script>
+
+<style>
+  /* Tarjeta de campaña */
+  .camp-card {
+    background: var(--surface);
+    border-radius: 14px;
+    padding: 16px;
+  }
+  .camp-card h4 { margin: 0 0 6px; }
+  .meta { color: var(--muted); font-size: .9rem; }
+  .actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+  .actions button {
+    height: 36px; padding: 0 14px; border: none; border-radius: 10px;
+    background: #475569; color: #fff; cursor: pointer;
+  }
+  .actions button:hover { filter: brightness(1.05); }
+</style>
+
+{% endblock %}
