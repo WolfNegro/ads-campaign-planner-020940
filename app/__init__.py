@@ -20,7 +20,11 @@ def create_app() -> Flask:
     app.config["JSON_SORT_KEYS"] = False
 
     # ---------- DB / SQLAlchemy (sin Flask-SQLAlchemy) ----------
-    db_url = os.getenv("DATABASE_URL") or os.getenv("SQLALCHEMY_DATABASE_URI")
+    db_url = (
+        os.getenv("DATABASE_URL")
+        or os.getenv("SQLALCHEMY_DATABASE_URI")
+        or "sqlite:////tmp/app.db"   # fallback seguro en Vercel
+    )
     engine = init_db(db_url)  # crea tablas si no existen
     SessionLocal = sessionmaker(bind=engine, expire_on_commit=False, future=True)
     app.extensions["db_sessionmaker"] = SessionLocal
@@ -38,23 +42,21 @@ def create_app() -> Flask:
     # ---------- Blueprints ----------
     from .routes.main import bp as main_bp
     from .routes.planner import planner as planner_bp
-    from .routes.api_campaigns import bp as api_campaigns_bp
     from .routes.structure import bp as structure_bp
     from .routes.builder_api import bp as builder_api_bp
-    from .routes.builder import bp as builder_bp       # <-- NUEVO
+    from .routes.builder import bp as builder_bp
 
     app.register_blueprint(main_bp)
     app.register_blueprint(planner_bp)
-    app.register_blueprint(api_campaigns_bp)
     app.register_blueprint(structure_bp)
     app.register_blueprint(builder_api_bp)
-    app.register_blueprint(builder_bp)                 # <-- NUEVO
+    app.register_blueprint(builder_bp)
 
     # ---------- CLI helpers ----------
     @app.cli.command("init-db")
     def init_db_cmd():
         init_db(db_url)
-        print("✔ DB lista:", (db_url or "sqlite:///instance/app.db"))
+        print("✔ DB lista:", db_url)
 
     @app.cli.command("seed-demo")
     def seed_demo_cmd():
